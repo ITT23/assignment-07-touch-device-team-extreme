@@ -29,9 +29,9 @@ def process_img(frame):
             x,y,w,h = cv2.boundingRect(ctn)
             cv2.rectangle(img_contours,(x,y),(x+w,y+h),(0,255,0),2)
             cut = frame[y:y+h, x:x+w]
-            resized = cv2.resize(cut, (36, 36))
-            title = f'{time.time()}-touch-a.png'
-            cv2.imwrite(f'touch-data/{title}', resized)
+            #resized = cv2.resize(cut, (36, 36))
+            title = f'{time.time()}-touch-t.png'
+            cv2.imwrite(f'touch-data-original/{title}', cut)
 
     return img_contours
 
@@ -56,7 +56,7 @@ while True:
         running = True
     elif cv2.waitKey(1) & 0xFF == ord('q'):
         break
-    time.sleep(0.1)
+    time.sleep(0.05)
 
 cap.release()
 cv2.destroyAllWindows()
