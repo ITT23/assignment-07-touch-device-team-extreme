@@ -25,7 +25,7 @@ def process_img(frame):
     img_contours = cv2.drawContours(img_contours, contours, -1, (255, 0, 0), 3)
 
     for ctn in contours:
-        if 200 < cv2.contourArea(contour=ctn) < 2500:
+        if 200 < cv2.contourArea(contour=ctn) < 2500 and cv2.isContourConvex(contour=ctn):
             x,y,w,h = cv2.boundingRect(ctn)
             cv2.rectangle(img_contours,(x,y),(x+w,y+h),(0,255,0),2)
             cut = frame[y:y+h, x:x+w]

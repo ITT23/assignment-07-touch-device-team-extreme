@@ -24,7 +24,6 @@ class ImageBoard:
         target_sprite.y += dy
 
     def scale(self, x: int, y: int, dx: int, dy: int):
-        # TODO: mit abstände machen
         target_sprite = self.find_target(x, y)
         if not target_sprite:
             return
@@ -47,14 +46,13 @@ class ImageBoard:
         if not target_sprite:
             return
         center = self.get_center(target_sprite)
-        if (x < center[0]):
+        if (y < center[1]):
             if (dx > 0 and dy > 0) or (dx > 0 and dy < 0): 
                 print("rotate gegen den uhrzeigersinn")
                 target_sprite.rotation -= 1
             elif (dx < 0 and dy > 0) or (dx < 0 and dy < 0):
                 print("rotate im uhrzeigersinn")
                 target_sprite.rotation += 1
-            #target_sprite.rotation += 1
         else:
             if (dx > 0 and dy > 0) or (dx > 0 and dy < 0): 
                 print("rotate im uhrzeigersinn")
@@ -62,7 +60,6 @@ class ImageBoard:
             elif (dx < 0 and dy > 0) or (dx < 0 and dy < 0):
                 print("rotate gegen den uhrzeigersinn")
                 target_sprite.rotation -= 1
-            #target_sprite.rotation -= 1
     
 
     def get_center(self, target_sprite) -> tuple:
