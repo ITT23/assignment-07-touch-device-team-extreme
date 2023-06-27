@@ -39,8 +39,8 @@ def process_img(frame, window_w, window_h):
 
             cut = frame[cY-50:cY+50, cX-50:cX+50]
             #resized = cv2.resize(cut, (100, 100))
-            title = f'{time.time()}-touch-t.png'
-            cv2.imwrite(f'touch-data-border/{title}', cut)
+            title = f'{time.time()}-hover-s.png'
+            cv2.imwrite(f'hover-data-border-test/{title}', cut)
 
     return img_contours
 
@@ -67,7 +67,7 @@ while True:
         running = True
     elif cv2.waitKey(1) & 0xFF == ord('q'):
         break
-    time.sleep(0.05)
+    time.sleep(0.5)
 
 cap.release()
 cv2.destroyAllWindows()
