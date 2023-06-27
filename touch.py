@@ -2,17 +2,22 @@ import cv2
 import sys
 import numpy as np
 import time
+import keras
 
 
 video_id = 6
 running = False
 threshold = 75
 
+CONDITIONS = ['hover', 'touch']
+
 
 if len(sys.argv) > 1:
     video_id = int(sys.argv[1])
 
 cap = cv2.VideoCapture(video_id)
+
+model = keras.models.load_model("erwin_final")
 
 
 
@@ -40,7 +45,12 @@ def process_img(frame, window_w, window_h):
             cut = frame[cY-50:cY+50, cX-50:cX+50]
             #resized = cv2.resize(cut, (100, 100))
             title = f'{time.time()}-hover-s.png'
-            cv2.imwrite(f'hover-data-border-test/{title}', cut)
+            #cv2.imwrite(f'hover-data-border-test/{title}', cut)
+
+            resized = cv2.resize(cut, (64, 64))
+            reshaped = resized.reshape(-1, 64, 64, 3)
+            y = model.predict(reshaped)
+            print(CONDITIONS[np.argmax(y)], np.max(y))
 
     return img_contours
 
@@ -67,7 +77,7 @@ while True:
         running = True
     elif cv2.waitKey(1) & 0xFF == ord('q'):
         break
-    time.sleep(0.5)
+    time.sleep(0.2)
 
 cap.release()
 cv2.destroyAllWindows()
