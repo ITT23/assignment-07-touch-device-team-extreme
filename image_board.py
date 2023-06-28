@@ -23,22 +23,28 @@ class ImageBoard:
         target_sprite.x += dx
         target_sprite.y += dy
 
-    def scale(self, x: int, y: int, dx: int, dy: int):
-        target_sprite = self.find_target(x, y)
-        if not target_sprite:
+    def scale(self, x1: int, y1: int, x2: int, y2: int, dx1: int, dy1: int, dx2: int, dy2: int):
+        target_sprite1 = self.find_target(x1, y1)
+        target_sprite2 = self.find_target(x2, y2)
+        if not target_sprite1 or not target_sprite2 or target_sprite1 != target_sprite2:
             return
-        center = self.get_center(target_sprite)
-        vector_drag_to_center = [(center[0] - x), (center[1] - y)]
-        vector_movement = [dx, dy]
-        dot_product = np.dot(vector_drag_to_center, vector_movement)
-        if dot_product > 0:
+        
+        center = self.get_center(target_sprite1)
+        vector_drag_to_center1 = [(center[0] - x1), (center[1] - y1)]
+        vector_movement1 = [dx1, dy1]
+        dot_product1 = np.dot(vector_drag_to_center1, vector_movement1)
+        vector_drag_to_center2 = [(center[0] - x2), (center[1] - y2)]
+        vector_movement2 = [dx2, dy2]
+        dot_product2 = np.dot(vector_drag_to_center2, vector_movement2)
+
+        if dot_product1 > 0 and dot_product2 > 0:
             # towards -> scale down
             print("scale down")
-            target_sprite.scale -= 0.001
-        else:
+            target_sprite1.scale -= 0.05
+        elif dot_product1 < 0 and dot_product2 < 0:
             # away -> scale up
             print("scale up")
-            target_sprite.scale += 0.001
+            target_sprite1.scale += 0.05
 
     # TODO: only rotate if dx, dy unverändert, ansonsten check scale
     def rotate(self, x: int, y: int, dx: int, dy: int) -> bool:
