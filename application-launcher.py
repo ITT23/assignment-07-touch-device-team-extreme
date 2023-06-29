@@ -4,6 +4,8 @@ import pyglet
 from DIPPID import SensorUDP
 import time
 
+# TODO: text file reading and automated mapping?
+
 class InputManager():
 
     def __init__(self) -> None:
@@ -21,29 +23,32 @@ class InputManager():
             x = value['x']
             y = value['y']
             self.points.append(Point(x,y))
-            if self.last_input_time == 0:
-                self.last_input_time = time.time()
+            self.last_input_time = time.time()
         
     def check_time(self):
         self.delta_time = time.time() - self.last_input_time
         if self.last_input_time != 0 and self.delta_time > self.threshold_time:
+            print(self.delta_time)
             print("threshold threshed")
             if len(self.points) > 10:
                 result = recognizer.recognize(self.points)
-                print(result.name)
+                #print(result.name)
                 self.open_window(result.name)
             self.last_input_time = 0
             self.delta_time = 0
             self.points.clear()
-    
+        
     def open_window(self, gesture):
         
         if gesture == 'circle':
-            os.system('firefox') # other linux: /usr/bin/firefox 
+            #os.system('firefox') # other linux: /usr/bin/firefox 
+            print('circle')
+        elif gesture == 'star':
+            print("star")
+            #os.sytem('blender')
         elif gesture == 'caret':
-            os.sytem('blender')
-        elif gesture == 'left_sq_bracket':
-            os.system('gimp')
+            print("caret")
+            #os.system('gimp')
 
 recognizer = DollarRecognizer()
 input_man = InputManager()
