@@ -1,0 +1,3 @@
+circle, usr/bin/firefox
+caret, usr/bin/blender
+left_sq_bracket, usr/bin/gimp
