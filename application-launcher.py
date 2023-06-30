@@ -3,6 +3,8 @@ import os
 import pyglet
 from DIPPID import SensorUDP
 import time
+import argparse
+import sys
 
 PYGLET_WIN_WIDTH = 500
 PYGLET_WIN_HEIGHT = 400
@@ -31,7 +33,7 @@ class InputManager():
         self.delta_time = time.time() - self.last_input_time
         if self.last_input_time != 0 and self.delta_time > self.threshold_time:
             print(self.delta_time)
-            print("threshold threshed")
+            #print("threshold threshed")
             if len(self.points) > 10:
                 result = recognizer.recognize(self.points)
                 self.open_window(result.name)
@@ -39,17 +41,14 @@ class InputManager():
             self.delta_time = 0
             self.points.clear()
         
-    def open_window(self, gesture):
-        # TODO
-        if gesture == 'circle':
-            #os.system('firefox') # other linux: /usr/bin/firefox 
-            print('circle')
-        elif gesture == 'star':
-            print("star")
-            #os.sytem('blender')
-        elif gesture == 'caret':
-            print("caret")
-            #os.system('gimp')
+    def open_window(self, recognized_gesture):
+        for gesture_id, gesture in enumerate(reader.gestures):
+            if recognized_gesture == gesture:
+                #print(reader.paths[gesture_id])
+                os.system(reader.paths[gesture_id])
+                return True
+        return False
+
 
 
 
@@ -70,9 +69,8 @@ class MouseInputManager():
     def window_opened(self, recognized_gesture):      
         for gesture_id, gesture in enumerate(reader.gestures):
             if recognized_gesture == gesture:
-                print(gesture)
-                print(reader.paths[gesture_id])
-                #os.system[reader.paths[id]]
+                #print(reader.paths[gesture_id])
+                os.system(reader.paths[gesture_id])
                 return True
         return False
 
@@ -146,8 +144,9 @@ class TextFileReader():
             self.gestures.append(line[0])
             strip_path = line[1].rstrip('\n')
             self.paths.append(strip_path)
+        #print(self.gestures, self.paths)
 
-        print(self.gestures, self.paths)
+
 
 reader = TextFileReader()
 recognizer = DollarRecognizer()
@@ -155,6 +154,8 @@ window = pyglet.window.Window(PYGLET_WIN_WIDTH, PYGLET_WIN_HEIGHT)
 input_mng = InputManager()
 mouse_mng = MouseInputManager()
 ui_mng = UIManager()
+
+
 
 @window.event
 def on_mouse_press(x,y,button,modifier):
@@ -195,9 +196,24 @@ def on_draw():
     elif mouse_mng.input_recognized and not ui_mng.input_too_short:
             ui_mng.recognition_text.draw()
 
+
 if __name__ == "__main__":
 
-    pyglet.app.run()
+    parser = argparse.ArgumentParser(description='Arguments for specifying image extraction')
 
-    #while True:
-        #input_mng.check_time()
+    parser.add_argument('-in', '--input', type=int, help='0 = touchbox, 1 = mouse')
+
+    args = parser.parse_args()
+
+    if args:
+        if args.input == 0:
+            print("0")
+            while True:
+                input_mng.check_time()
+        else:
+            print("1")
+            pyglet.app.run()
+
+    else:
+        print("please parse which input device you choose: 0 = touchbox, 1 = mouse")
+        sys.exit()
