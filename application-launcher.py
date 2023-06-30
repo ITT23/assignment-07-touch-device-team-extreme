@@ -4,7 +4,9 @@ import pyglet
 from DIPPID import SensorUDP
 import time
 
-# TODO: text file reading and automated mapping?
+PYGLET_WIN_WIDTH = 500
+PYGLET_WIN_HEIGHT = 400
+MIN_RECORDED_MOUSE_NUMS = 20
 
 class InputManager():
 
@@ -38,7 +40,7 @@ class InputManager():
             self.points.clear()
         
     def open_window(self, gesture):
-        
+        # TODO
         if gesture == 'circle':
             #os.system('firefox') # other linux: /usr/bin/firefox 
             print('circle')
@@ -57,24 +59,22 @@ class MouseInputManager():
         self.points = [] # mouse detected points
         self.input_recognized = False
     
-    def get_mirrored_x(self, x, width):
-        return width - x # consitensy with touchbox
+    def get_mirrored_x(self, x):
+        return PYGLET_WIN_WIDTH - x # consitensy with touchbox
     
     def mouse_is_inbounds(self, x, y, canvas_x_y_start, canvas_widht_height): # if mouse is inly in inner bounds of canvas
-        if x > canvas_x_y_start + 5 and x > canvas_widht_height and y > canvas_x_y_start and y < canvas_widht_height:
+        if x > canvas_x_y_start + 5 and x < canvas_widht_height - 5 and y > canvas_x_y_start + 5  and y < canvas_widht_height - 5:
             return True
         return False
     
-    def open_window(self, gesture):      
-        if gesture == 'circle':
-            #os.system('firefox') # other linux: /usr/bin/firefox 
-            print('circle')
-        elif gesture == 'star':
-            print("star")
-            #os.sytem('blender')
-        elif gesture == 'caret':
-            print("caret")
-            #os.system('gimp')
+    def window_opened(self, recognized_gesture):      
+        for gesture_id, gesture in enumerate(reader.gestures):
+            if recognized_gesture == gesture:
+                print(gesture)
+                print(reader.paths[gesture_id])
+                #os.system[reader.paths[id]]
+                return True
+        return False
 
 
 
@@ -85,7 +85,7 @@ class UIManager():
         self.canvas_width_height = 280
         self.shapes = []
         self._create_shapes()
-        self.help_image_path = './assets/input_help_task03.png' # what gestures are possible
+        self.help_image_path = './assets/gesture_help.jpg' # what gestures are possible
         self.help_image = pyglet.image.load(self.help_image_path)
         self.header = pyglet.text.Label("mouse gesture down here:",
                                         font_name="Arial",
@@ -149,14 +149,55 @@ class TextFileReader():
 
         print(self.gestures, self.paths)
 
+reader = TextFileReader()
 recognizer = DollarRecognizer()
+window = pyglet.window.Window(PYGLET_WIN_WIDTH, PYGLET_WIN_HEIGHT)
 input_mng = InputManager()
 mouse_mng = MouseInputManager()
 ui_mng = UIManager()
-reader = TextFileReader()
 
+@window.event
+def on_mouse_press(x,y,button,modifier):
+    ui_mng.input_too_short = False
+    ui_mng.recognition_text.text = ""
+    if mouse_mng.mouse_is_inbounds(x, y, ui_mng.canvas_x_y_start, ui_mng.canvas_width_height):
+        mouse_mng.points.append(Point(x, y))
 
-#if __name__ == "__main__":
+@window.event
+def on_mouse_drag(x,y,dx,dy,buttins,modifiers):
+    if mouse_mng.mouse_is_inbounds(x, y, ui_mng.canvas_x_y_start, ui_mng.canvas_width_height):
+        mouse_mng.points.append(Point(x, y))
+
+@window.event
+def on_mouse_release(x,y,button,modifiers):
+    if len(mouse_mng.points) > MIN_RECORDED_MOUSE_NUMS:
+        result = recognizer.recognize(mouse_mng.points)
+        mouse_mng.input_recognized = mouse_mng.window_opened(result.name)
+        if not mouse_mng.input_recognized:
+            ui_mng.recognition_text.text = "input not recognized"
+        else:
+            ui_mng.recognition_text.text = "input recognized"
+    else:
+        ui_mng.input_too_short = True
+    mouse_mng.points.clear()
+
+@window.event
+def on_draw():
+    window.clear()
+    ui_mng._draw()
+    for point in mouse_mng.points:
+        circle = pyglet.shapes.Circle(point.x, point.y, 5, color=(237, 155, 64))
+        circle.draw()
+    if ui_mng.input_too_short:
+        ui_mng._draw_short_input()
+    if not mouse_mng.input_recognized and not ui_mng.input_too_short:
+            ui_mng.recognition_text.draw()
+    elif mouse_mng.input_recognized and not ui_mng.input_too_short:
+            ui_mng.recognition_text.draw()
+
+if __name__ == "__main__":
+
+    pyglet.app.run()
 
     #while True:
         #input_mng.check_time()
