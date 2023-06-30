@@ -2,7 +2,7 @@ import cv2
 import sys
 import numpy as np
 import time
-import keras
+#import keras
 from event_streamer import EventStreamer
 
 
@@ -70,8 +70,8 @@ def process_img(frame, window_w, window_h):
             except:
                 continue
             
-    if streamer.dippid_data:
-        streamer.send_stream()
+    #if streamer.dippid_data:
+    streamer.send_stream()
     return img_contours
 
 
@@ -95,7 +95,6 @@ while True:
         running = True
     elif cv2.waitKey(1) & 0xFF == ord('q'):
         break
-    #time.sleep(0.2)
 
 cap.release()
 cv2.destroyAllWindows()

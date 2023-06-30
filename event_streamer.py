@@ -34,6 +34,7 @@ class EventStreamer:
         call this function everytime you want to send data
         (for example in a certain intervall)
         """ 
+        print(self.dippid_data)
         self.sock.sendto(json.dumps(self.dippid_data).encode(), (self.IP, self.PORT))
         self.dippid_data = dict()
         self.events = dict()

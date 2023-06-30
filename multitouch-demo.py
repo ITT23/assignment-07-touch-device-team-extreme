@@ -23,18 +23,19 @@ def on_key_press(symbol, modifiers):
     """
     handle key press: quit on Q
     """
-    if symbol == pyglet.window.key.Q:
+    if symbol == pyglet.window.key.R:
+        board.cursors = board.init_cursors()
+        board.images = board.read_images()
+    elif symbol == pyglet.window.key.Q:
         sys.exit(0)
 
 
 # # TODO: use touch events here
-# @window.event
-# def on_mouse_drag(x, y, dx, dy, buttons, modifiers):
-#     # TODO: move if single touch
-#     board.move(x, y, dx, dy)
-#     # TODO: if multi touch: scale or rotate (no movement for one finger with rotation)
-#     #board.scale(x, y, dx, dy)
-#     #board.rotate(x, y, dx, dy)
+@window.event
+def on_mouse_drag(x, y, dx, dy, buttons, modifiers):
+    for img in board.images:
+        board.rotate_by_angle(img, x, y, x - dx, y - dy)
+
 
 
 # # TODO: use hover events here
@@ -46,8 +47,12 @@ def on_key_press(symbol, modifiers):
 
 @window.event
 def on_draw():
+    print(sensor.get_capabilities())
     if sensor.has_capability('events'):
+        # TODO: warum kommt hier immer noch die letzten werte an? geschickt wird {}
         board.update(sensor.get_value('events'))
+    else:
+        board.update(None)
     window.clear()
     board.draw()
     
