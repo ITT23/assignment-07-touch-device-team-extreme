@@ -5,6 +5,7 @@ import numpy as np
 
 
 COLOR_HOVER = (156, 0, 75)
+hover_colors = [(0, 0, 75), (156, 100, 75), (156, 255, 75), (0, 0, 0), (255, 255, 255)]
 COLOR_TOUCH = (0, 255, 0)
 MAX_NUM_FINGERS_DETECTED = 5
 
@@ -20,7 +21,7 @@ class ImageBoard:
         cursors = []
         for i in range(0, MAX_NUM_FINGERS_DETECTED):
             detected_finger = dict()
-            detected_finger['point_of_input'] = pyglet.shapes.Circle(-5, -5, 7, color=COLOR_HOVER)
+            detected_finger['point_of_input'] = pyglet.shapes.Circle(-5, -5, 7, color=hover_colors[i])
             detected_finger['delta'] = [None, None]
             detected_finger['target'] = None
             detected_finger['input_type'] = None
@@ -32,12 +33,10 @@ class ImageBoard:
         num_images = len(os.listdir(os.path.normpath('img')))
         for i, filename in enumerate(os.listdir(os.path.normpath('img'))):
             img = pyglet.resource.image(f'img/{filename}')
-            #img.anchor_x = img.width / 2
-            #img.anchor_y = img.height / 2
+            img.anchor_x = img.width // 2
+            img.anchor_y = img.height // 2
             img_sprite = pyglet.sprite.Sprite(x=i * (self.win_w / num_images), y=i * (self.win_h / num_images), img=img)
             img_sprite.scale = 0.3
-            #img_sprite.anchor_x = img_sprite.width // 2
-            #img_sprite.anchor_y = img_sprite.height // 2
             images[img_sprite] = []
         return images
     
@@ -67,9 +66,11 @@ class ImageBoard:
         sprite.rotation += math.degrees(angle)
 
     def move_sprite(self, sprite, delta):
-        if delta:
+        if delta[0] and delta[1] and abs(delta[0]) < 75 and abs(delta[1]) < 75:
+            print(delta)
             sprite.x += delta[0]
             sprite.y += delta[1]
+        
 
     def scale_calculated(self, sprite, x_before, y_before, x_after, y_after):
         center = self.get_center(sprite)
@@ -79,6 +80,8 @@ class ImageBoard:
         len_after = math.sqrt(sum(i**2 for i in vector_to_center_after))
         scale_factor = len_after / len_before
         sprite.scale *= scale_factor
+        #sprite.image.width = sprite.width
+        #sprite.image.height = sprite.height
 
 
     def get_center(self, target_sprite) -> tuple:
@@ -94,7 +97,7 @@ class ImageBoard:
         y = cursor['point_of_input'].y
         visible = cursor['point_of_input'].visible
         for sprite in self.images:
-            if visible and x >= sprite.x and x <= (sprite.x + sprite.width) and y >= sprite.y and y <= (sprite.y + sprite.height):
+            if visible and x >= sprite.x - sprite.width/2 and x <= (sprite.x + sprite.width/2) and y >= sprite.y - sprite.height / 2 and y <= (sprite.y + sprite.height/2):
                 self.images[sprite].append(cursor)
                 return sprite
         
@@ -104,9 +107,8 @@ class ImageBoard:
         self.update_images()
         
         
+        
     def update_cursors(self, data):
-        if(data):
-            print(len(data))
         for i in range(0, MAX_NUM_FINGERS_DETECTED):
             finger_id = str(i)
             try:
@@ -119,9 +121,9 @@ class ImageBoard:
                 #print(abs(dx))
 
 
-                if ((abs(dx) > 75 and not self.cursors[int(finger_id)]['delta'][0]) or abs(dx) <= 75) and ((abs(dy) > 75 and not self.cursors[int(finger_id)]['delta'][1]) or abs(dy) <= 75):
-                    self.cursors[int(finger_id)]['delta'][0] = dx
-                    self.cursors[int(finger_id)]['delta'][1] = dy
+                #if ((abs(dx) > 75 and not self.cursors[int(finger_id)]['delta'][0]) or abs(dx) <= 75) and ((abs(dy) > 75 and not self.cursors[int(finger_id)]['delta'][1]) or abs(dy) <= 75):
+                self.cursors[int(finger_id)]['delta'][0] = dx
+                self.cursors[int(finger_id)]['delta'][1] = dy
 
 
                 # if ((self.cursors[int(finger_id)]['delta'][0] and (math.abs(dx) <= 150)) or not self.cursors[int(finger_id)]['delta'][0]):
@@ -131,10 +133,11 @@ class ImageBoard:
 
                 self.cursors[int(finger_id)]['input_type'] = finger_caps['type']
                 self.cursors[int(finger_id)]['point_of_input'].visible = True
-                self.cursors[int(finger_id)]['point_of_input'].color = COLOR_TOUCH if finger_caps['type'] == 'touch' else COLOR_HOVER
+                self.cursors[int(finger_id)]['point_of_input'].color = COLOR_TOUCH if finger_caps['type'] == 'touch' else hover_colors[int(finger_id)]
                 self.cursors[int(finger_id)]['point_of_input'].x = x
                 self.cursors[int(finger_id)]['point_of_input'].y = y
                 self.cursors[int(finger_id)]['target'] = self.find_target(self.cursors[int(finger_id)])
+                #print(self.cursors[int(finger_id)]['target'])
             except:
                 self.cursors[int(finger_id)]['point_of_input'].visible = False
                 continue
@@ -142,8 +145,10 @@ class ImageBoard:
 
     def update_images(self):
         for sprite, cursors_on_image in self.images.items():
+            print(cursors_on_image)
             if len(cursors_on_image) == 1 and cursors_on_image[0]['input_type'] == 'touch':
                 self.move_sprite(sprite, cursors_on_image[0]['delta'])
+                #continue
                 
             elif len(cursors_on_image) == 2:
                 #if cursors_on_image[0]['input_type'] != cursors_on_image[1]['input_type']:
@@ -155,6 +160,9 @@ class ImageBoard:
                 y_before = y_after - hovering_cursor['delta'][1]
                 self.rotate_by_angle(sprite, x_before, y_before, x_after, y_after)
                 self.scale_calculated(sprite, x_before, y_before, x_after, y_after)
+        
+                #sprite.anchor_x = sprite.width / 2
+                #sprite.anchor_y = sprite.height / 2
                 #sprite.anchor_x = sprite.width // 2
                 #sprite.anchor_y = sprite.height // 2
                 # if cursors_on_image[0]['input_type'] != cursors_on_image[1]['input_type']:

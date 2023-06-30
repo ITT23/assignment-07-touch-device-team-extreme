@@ -36,7 +36,8 @@ class EventStreamer:
         """ 
         print(self.dippid_data)
         self.sock.sendto(json.dumps(self.dippid_data).encode(), (self.IP, self.PORT))
-        self.dippid_data = dict()
+        #self.dippid_data = dict()
         self.events = dict()
+        self.dippid_data['events'] = self.events
         print("-------- event stream sent --------")
 

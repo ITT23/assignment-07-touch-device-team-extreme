@@ -69,6 +69,7 @@ def process_img(frame, window_w, window_h):
                 streamer.add_to_stream(type=gesture, x=cX, y=cY, dx=0, dy=0)
             except:
                 continue
+        
             
     #if streamer.dippid_data:
     streamer.send_stream()
@@ -95,6 +96,7 @@ while True:
         running = True
     elif cv2.waitKey(1) & 0xFF == ord('q'):
         break
+    #time.sleep(0.1)
 
 cap.release()
 cv2.destroyAllWindows()

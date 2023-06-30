@@ -47,9 +47,7 @@ def on_mouse_drag(x, y, dx, dy, buttons, modifiers):
 
 @window.event
 def on_draw():
-    print(sensor.get_capabilities())
     if sensor.has_capability('events'):
-        # TODO: warum kommt hier immer noch die letzten werte an? geschickt wird {}
         board.update(sensor.get_value('events'))
     else:
         board.update(None)
