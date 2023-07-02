@@ -18,7 +18,7 @@ Controls:
 - touch events are displayed by circles (green)
 - to move an image: drag it with your **touching** finger
 - to rotate an image: place two **touching** fingers on the image and change a finger's angle towards image center
-- ro scale an image: place two **touching** fingers on the image and change the distance between a finger and the image center
+- to scale an image: place two **touching** fingers on the image and change the distance between a finger and the image center
 
 # Task 3
 
@@ -27,6 +27,7 @@ Prepare `applications.txt`:
 * the text file is structured as following: `gesture, path_to_application`
 * the path to application depends on the OS:
   * Linux: `/usr/bin/firefox ` || somehow with Ubunutu `firefox` was enough
+  * Windows: absolute path to the .exe-file
 
 Run program:
 
