@@ -26,7 +26,7 @@ We tried out two approaches:
 2. Hard Coded Threshholds
 
 In the end we decided to go with the second plan, but had already put in work in plan one. Because of this we want to explain shortly what we did, so we didn't do it completely unnecessary. 
-We captured 7783 samples (=photos of fingers) for trainingsdata, labeled with either "hover" or "touch". For this we detected the bounding box of the fingers and added padding to it, so the box for capturing was always the same size. We trained a CNN with this data, which we called Erwin ("ein richtig wildes input netzwerk"). For the first few tries it worked relatively good, but with progress in code and assignment tasks we found out that this will not be the way. Finally, we went back to hard coded threshholds, which can be seen in the code.
+We captured 7783 samples (=photos of fingers) for trainingsdata, labeled with either "hover" or "touch". For this we detected the bounding box of the fingers and added padding to it, so the box for capturing was always the same size. We trained a CNN with this data, which we called Erwin ("ein richtig wildes input netzwerk"). For the first few tries it worked relatively good, but with progress in code and assignment tasks we found out that this will not be the way - especially for different lighting conditions. Finally, we went back to hard coded threshholds, which can be seen in the code.
 
 ## Usage Guide
 
@@ -34,9 +34,10 @@ We captured 7783 samples (=photos of fingers) for trainingsdata, labeled with ei
     - tape the flaps as following (pictures)
 2. Connect the camera
 3. Check if camera ID is the same as in the code 
-4. Start `touch.py` 
-5. Press `s` to calibrate the camera to the light
-6. Start whatever application you want
-7. Give us many points
+4. Start `touch-input.py` (optional: input params video_id and receiver ip)
+5. Press `s` to calibrate the camera to the light (do not place anything on the touchscreen yet)
+6. Hover by light touching the surface with your fingertip, Touch by stronger touching the surface and bending the finger a bit
+7. Start whatever application you want
+8. Give us many points
 
 
