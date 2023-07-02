@@ -26,7 +26,7 @@ Prepare `applications.txt`:
 
 * the text file is structured as following: `gesture, path_to_application`
 * the path to application depends on the OS:
-  * Linux: `/usr/bin/firefox ` || somehow with Ubunutu `firefox` was enough 
+  * Linux: `/usr/bin/firefox ` || somehow with Ubunutu `firefox` was enough
 
 Run program:
 
@@ -36,5 +36,5 @@ Run program:
   - `0` for input with ERWIN (draw gestures with your finger on the box)
   - `1` for input with mouse (draw gestures with mouse drag in the pyglet window)
   - example: `application-launcer.py --input 1`
-- possible gestures (dot marks the start - based on the $1 gesture recognizer by Webbrock et al.)
+- possible gestures
   ![gestures](./assets/gesture_help.jpg)
