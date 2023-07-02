@@ -36,7 +36,7 @@ Run program:
 - start `application-launcher.py` with additional parameter `--input `
   - `0` for input with ERWIN (draw gestures with your finger on the box)
   - `1` for input with mouse (draw gestures with mouse drag in the pyglet window)
-  - example: `application-launcer.py --input 1`
+  - example: `application-launcher.py --input 1`
 - possible gestures
 
 
