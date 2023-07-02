@@ -131,7 +131,7 @@ class ImageBoard:
                 # set finger's new coordinates, delta of movement, input type and target sprite
                 finger_caps = data[finger_id]
                 x = finger_caps['x'] * self.win_w
-                y = finger_caps['y'] * self.win_h
+                y = (1 - finger_caps['y']) * self.win_h
                 dx = x - self.cursors[int(finger_id)]['point_of_input'].x
                 dy = y - self.cursors[int(finger_id)]['point_of_input'].y
 

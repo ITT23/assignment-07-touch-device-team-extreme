@@ -29,22 +29,22 @@ def process_img(frame, threshold, window_w, window_h):
     img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     ret, thresh = cv2.threshold(img_gray, threshold, 255, cv2.THRESH_BINARY)
     contours, hierarchy = cv2.findContours(thresh, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-    img_contours = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    img_contours = cv2.cvtColor(thresh, cv2.COLOR_BGR2RGB)
     img_contours = cv2.drawContours(img_contours, contours, -1, (255, 0, 0), 3)
 
-    for ctn in contours:
-        area = cv2.contourArea(contour=ctn)
+    for cnt in contours:
+        area = cv2.contourArea(contour=cnt)
         gesture = None
         # contour not finger size
         if area < 80 or area > 3500:
             continue
         else:
-            M = cv2.moments(ctn)
+            M = cv2.moments(cnt)
             cX = int(M["m10"] / M["m00"])
             cY = int(M["m01"] / M["m00"])
 
             # draw bounding box around finger
-            x,y,w,h = cv2.boundingRect(ctn)
+            x,y,w,h = cv2.boundingRect(cnt)
             cv2.circle(img_contours, (cX, cY), 7, (255, 255, 255), -1)
             cv2.rectangle(img_contours,(cX-50, cY-50),(cX+50, cY+50),(0, 0, 0),2)
 
@@ -97,7 +97,7 @@ while True:
 
     if cv2.waitKey(1) & 0xFF == ord('s'):
         running = True
-    elif cv2.waitKey(1) & 0xFF == ord('q'):
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 cap.release()

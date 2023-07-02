@@ -23,7 +23,7 @@ class EventStreamer:
         current_event = dict()
         current_event['type'] = type
         current_event['x'] = x / self.width
-        current_event['y'] = y / self.height
+        current_event['y'] = 1 - (y / self.height)
         self.events[index] = current_event
         self.dippid_data['events'] = self.events
 
@@ -32,6 +32,7 @@ class EventStreamer:
         """
         send data for each detected finger
         """ 
+        print(self.dippid_data)
         self.sock.sendto(json.dumps(self.dippid_data).encode(), (self.IP, self.PORT))
         self.events = dict()
         self.dippid_data['events'] = self.events
