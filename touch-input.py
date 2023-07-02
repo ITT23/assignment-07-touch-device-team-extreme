@@ -90,7 +90,8 @@ while True:
     if not running:
         # at the beginning, capture average "white" of the touchscreen for finger threshold
         img_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        threshold = np.bincount(img_gray.flatten()).argmax() - 65
+        darkest = min(img_gray.flatten())
+        threshold = darkest - 50
     else:
         img = process_img(frame, threshold, WINDOW_WIDTH, WINDOW_HEIGHT)
     cv2.imshow('frame', img)
