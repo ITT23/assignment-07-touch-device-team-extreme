@@ -38,4 +38,6 @@ Run program:
   - `1` for input with mouse (draw gestures with mouse drag in the pyglet window)
   - example: `application-launcer.py --input 1`
 - possible gestures
+
+
 ![gestures](./assets/gesture_help.jpg)
