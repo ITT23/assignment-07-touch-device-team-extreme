@@ -13,9 +13,9 @@ class EventStreamer:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 
-    def add_to_stream(self, type: str, x: float, y: float, dx: float, dy: float):
+    def add_to_stream(self, type: str, x: float, y: float):
         """
-        add event to stream which can be sent later
+        add event for each detected finger to stream
         """
         if type != 'touch' and type != 'hover':
             return
@@ -26,18 +26,13 @@ class EventStreamer:
         current_event['y'] = y / self.height
         self.events[index] = current_event
         self.dippid_data['events'] = self.events
-        #print(current_event)
 
 
     def send_stream(self):
         """
-        call this function everytime you want to send data
-        (for example in a certain intervall)
+        send data for each detected finger
         """ 
-        print(self.dippid_data)
         self.sock.sendto(json.dumps(self.dippid_data).encode(), (self.IP, self.PORT))
-        #self.dippid_data = dict()
         self.events = dict()
         self.dippid_data['events'] = self.events
-        print("-------- event stream sent --------")
 
