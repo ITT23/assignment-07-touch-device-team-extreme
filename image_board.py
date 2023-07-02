@@ -7,13 +7,13 @@ import numpy as np
 
 COLOR_HOVER = (156, 0, 75)
 COLOR_TOUCH = (0, 255, 0)
-MAX_NUM_FINGERS_DETECTED = 5
 
 
 class ImageBoard:
-    def __init__(self, window_w, window_h) -> None:
+    def __init__(self, window_w, window_h, fingers) -> None:
         self.win_w = window_w
         self.win_h = window_h
+        self.max_fingers_detected = fingers
         self.images = self.read_images()
         self.cursors = self.init_cursors()
 
@@ -22,7 +22,7 @@ class ImageBoard:
         the system detects a maximum of five fingers on the screen
         """
         cursors = []
-        for i in range(0, MAX_NUM_FINGERS_DETECTED):
+        for i in range(0, self.max_fingers_detected):
             detected_finger = dict()
             detected_finger['point_of_input'] = pyglet.shapes.Circle(-5, -5, 7, color=COLOR_HOVER)
             detected_finger['delta'] = [None, None]
@@ -125,7 +125,7 @@ class ImageBoard:
         self.update_images()
         
     def update_cursors(self, data):
-        for i in range(0, MAX_NUM_FINGERS_DETECTED):
+        for i in range(0, self.max_fingers_detected):
             finger_id = str(i)
             try:
                 # set finger's new coordinates, delta of movement, input type and target sprite

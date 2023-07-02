@@ -9,8 +9,13 @@ from DIPPID import SensorUDP
 PORT = 5700
 sensor = SensorUDP(PORT)
 
+if len(sys.argv) > 1:
+    num_max_fingers = int(sys.argv[1])
+else:
+    num_max_fingers = 5
+
 window = pyglet.window.Window(fullscreen = True)
-board = ImageBoard(window.width, window.height)
+board = ImageBoard(window.width, window.height, num_max_fingers)
 
 
 @window.event
