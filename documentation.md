@@ -21,7 +21,6 @@ For further design we decided to show how fascinating the "Oberpfälzer"-dialect
 ![topview](./assets/box_top_view.jpeg)
 ![sideview](./assets/box_inside.jpeg)
 
-
 ## Code
 
 We tried out two approaches:
@@ -30,7 +29,7 @@ We tried out two approaches:
 2. Threshholds
 
 In the end we decided to go with the second plan, but had already put in lot of work in the CNN plan. Because of this we want to explain shortly what we did, so we didn't do it completely unnecessary.
-We captured 7783 samples (=photos of fingers) for trainingsdata, labeled with either "hover" or "touch". For this we detected the bounding box of the fingers and added padding to it, so the box for capturing was always the same size. We trained a CNN with this data, which we called ERWIN ("ein richtig wildes input netzwerk"). With progress in code and assignment tasks the output was not good enough, so we had so retire ERWIN (but kept him in an extra branche `erwin-legacy`) and do it with thresholds.
+We captured 7783 samples (=photos of fingers) for trainingsdata, labeled with either "hover" or "touch". For this we detected the bounding box of the fingers and added padding to it, so the box for capturing was always the same size. We trained a CNN with this data, which we called ERWIN ("ein richtig wildes input netzwerk"). With progress in code and assignment tasks the output was not good enough, so we had so retire ERWIN as the recognizer, but to honor him we called the box ERWIN and do the distinction with thresholds.
 
 For this we transform the frame to greyscale picture and perform a binary threshold. Detected objects (black) are drawn with a contour, which contained area we further analyse to determine what objects are being tracked (e.g. fingers) and which not (e.g. palms).
 
